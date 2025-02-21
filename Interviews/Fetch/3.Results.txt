@@ -1,0 +1,13 @@
+Hello, here are my key findings from this exercise.
+
+These datasets are very messy, full of gaps that make it difficult to accurately present findings. The key issues with the data are
+1. 99.5% of the user data in the transaction table is missing from the user table. Accurate user data is critical to identifying users' age and account history. This will impact the accuracy of any analysis involving account age, user age, gender, and location
+2. Missing barcode data, which is used for collecting product information and pricing. This impacts brand and category performance analysis.
+3. Missing quantity and/or sale price data from transactions. I've imputed most of these values if a similar copy exists elsewhere in the database.
+
+Compared to other sources I could find on grocery spending, I was somewhat surprised by the ranking and percentage of traffic at the top 10 outlets. Since Fetch requires users to submit barcodes, it makes sense for fresh and uncommon goods to be underrepresented in overall spend. This results in large convenience stores such as Dollar Store, Walgreens, and CVS accounting for more traffic than traditional grocery stores like Aldi and Kroger. Most of the items in the dataset are snacks (27.9%) and health & wellness (24.92%). So, I suppose it makes some sense considering what % of these stores are in packages with barcodes. 
+
+Here are the next steps that will be required.
+1. Filling the user table to make sure that it includes all users from the transactions table, as well as any demographic information that we can gather or prompt users for.
+2. Require users to scan barcodes, quantity, and pricing in order to redeem rewards
+3. (Optional) add store_id, zip_code, or state - I saw that certain stores may charge different prices, and this may vary from location to location
