@@ -1,11 +1,12 @@
 import pandas as pd
 import streamlit as st
+import io
+import requests
 import altair as alt
 import json
 import os
 
 st.set_page_config(page_title="Transactions Viewer", page_icon="🧾", layout="wide")
-SAMPLE_CSV = "sample_transactions.csv"
 
 # Reset button at the top
 col1, col2 = st.columns([4, 1])
@@ -22,19 +23,22 @@ with col2:
 
 @st.cache_data
 def load_credit_cards():
-    """Load credit card data from JSON file"""
+    """Load credit card data from GitHub raw URL"""
     try:
-        json_path = os.path.join(os.path.dirname(__file__), "cc_options.json")
-        with open(json_path, 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        st.error("Credit card data file (cc_options.json) not found")
+        url = "https://raw.githubusercontent.com/mhuh22/Python-workspace/master/Personal_Projects/Finance/cc_options.json"
+        response = requests.get(url)
+        response.raise_for_status()   # raise an error for bad status codes
+        return response.json()        # parse JSON directly
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error fetching credit card data: {e}")
         return None
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def load_default():
-    """Read the local sample CSV shipped next to the app."""
-    return pd.read_csv(SAMPLE_CSV)
+    url = "https://raw.githubusercontent.com/mhuh22/Python-workspace/master/Personal_Projects/Finance/sample_transactions.csv"
+    r = requests.get(url, headers={"User-Agent": "streamlit-app/1.0"}, timeout=10)
+    r.raise_for_status()
+    return pd.read_csv(io.StringIO(r.text))
 
 def get_all_card_options(transaction_category, amount, cc_data, total_monthly_spend=0):
     """Get all credit card options for a given transaction, factoring in annual fees"""
