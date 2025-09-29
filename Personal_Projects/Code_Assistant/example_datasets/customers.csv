@@ -1,0 +1,11 @@
+customer_id,name,email,country,signup_date,is_active
+1,Alice Johnson,alice.j@email.com,USA,2023-01-15,true
+2,Bob Smith,bob.smith@email.com,Canada,2023-02-20,true
+3,Charlie Brown,charlie.b@email.com,UK,2023-03-10,false
+4,Diana Prince,diana.p@email.com,USA,2023-04-05,true
+5,Eve Davis,eve.davis@email.com,Australia,2023-05-12,true
+6,Frank Miller,frank.m@email.com,Canada,2023-06-18,true
+7,Grace Lee,grace.lee@email.com,USA,2023-07-22,false
+8,Henry Wilson,henry.w@email.com,UK,2023-08-30,true
+9,Iris Taylor,iris.t@email.com,Australia,2023-09-14,true
+10,Jack Anderson,jack.a@email.com,USA,2023-10-01,true

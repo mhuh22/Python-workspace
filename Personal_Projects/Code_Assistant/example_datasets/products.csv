@@ -1,0 +1,6 @@
+product_id,product_name,category,supplier,stock_quantity,reorder_level
+1,Laptop,Electronics,TechCorp,45,10
+2,Mouse,Accessories,GadgetInc,150,30
+3,Keyboard,Accessories,GadgetInc,89,25
+4,Monitor,Electronics,ScreenPro,67,15
+5,Headphones,Accessories,AudioMax,112,20

@@ -1,0 +1,13 @@
+sale_id,region,sales_rep,revenue,quarter
+17,North,John Doe,57000,Q1
+18,South,Jane Smith,64000,Q1
+19,East,Mike Jones,50000,Q1
+20,West,Sarah Wilson,72000,Q1
+21,North,John Doe,60000,Q2
+22,South,Jane Smith,67000,Q2
+23,East,Mike Jones,53000,Q2
+24,West,Sarah Wilson,75000,Q2
+25,North,John Doe,63000,Q3
+26,South,Jane Smith,70000,Q3
+27,East,Mike Jones,56000,Q3
+28,West,Sarah Wilson,78000,Q3

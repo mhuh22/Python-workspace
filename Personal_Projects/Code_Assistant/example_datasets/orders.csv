@@ -1,0 +1,16 @@
+order_id,customer_id,product_name,quantity,unit_price,order_date,status
+101,1,Laptop,1,999.99,2023-02-01,delivered
+102,2,Mouse,2,29.99,2023-02-15,delivered
+103,1,Keyboard,1,79.99,2023-03-01,delivered
+104,3,Monitor,1,299.99,2023-03-20,cancelled
+105,4,Laptop,2,999.99,2023-04-10,delivered
+106,5,Mouse,3,29.99,2023-05-15,delivered
+107,2,Headphones,1,149.99,2023-05-20,shipped
+108,6,Keyboard,1,79.99,2023-06-25,delivered
+109,7,Monitor,2,299.99,2023-07-30,delivered
+110,8,Laptop,1,999.99,2023-08-15,delivered
+111,1,Mouse,5,29.99,2023-09-01,delivered
+112,9,Headphones,2,149.99,2023-09-20,shipped
+113,10,Monitor,1,299.99,2023-10-10,processing
+114,4,Keyboard,2,79.99,2023-10-15,delivered
+115,5,Laptop,1,999.99,2023-10-20,processing
