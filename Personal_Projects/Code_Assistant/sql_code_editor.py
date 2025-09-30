@@ -20,6 +20,7 @@ import json
 
 import duckdb
 import pandas as pd
+import requests
 import streamlit as st
 
 st.set_page_config(page_title="SQL Query Editor", layout="wide")
@@ -53,9 +54,6 @@ if "selected_table" not in st.session_state:
 con: duckdb.DuckDBPyConnection = st.session_state.con
 
 # --- Load example tables from example_datasets directory ------
-import pandas as pd
-import streamlit as st
-
 def load_example_tables():
     """Load CSVs directly from GitHub raw links and register them as tables."""
     base_url = "https://raw.githubusercontent.com/mhuh22/Python-workspace/master/Personal_Projects/Code_Assistant/example_datasets/"
