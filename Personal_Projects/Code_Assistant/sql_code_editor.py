@@ -53,38 +53,43 @@ if "selected_table" not in st.session_state:
 con: duckdb.DuckDBPyConnection = st.session_state.con
 
 # --- Load example tables from example_datasets directory ------
+import pandas as pd
+import streamlit as st
+
 def load_example_tables():
-    """Load example CSV files from example_datasets directory if they exist."""
-    import os
-    sample_dir = "example_datasets"
-    
-    if not os.path.exists(sample_dir):
-        return
-    
-    csv_files = [f for f in os.listdir(sample_dir) if f.endswith('.csv')]
-    
-    for csv_file in csv_files:
+    """Load CSVs directly from GitHub raw links and register them as tables."""
+    base_url = "https://raw.githubusercontent.com/mhuh22/Python-workspace/master/Personal_Projects/Code_Assistant/example_datasets/"
+
+    files = [
+        "customers.csv",
+        "orders.csv",
+        "products.csv",
+        "sales_2023.csv",
+        "sales_2024.csv"
+        # add more CSVs here if you add to the repo
+    ]
+
+    for fname in files:
         try:
-            filepath = os.path.join(sample_dir, csv_file)
-            df = pd.read_csv(filepath)
-            tname = sanitize_name(csv_file.replace(".csv", ""))
+            url = base_url + fname
+            df = pd.read_csv(url)
+            tname = sanitize_name(fname.replace(".csv", ""))
             st.session_state.tables[tname] = df
             con.register(tname, df)
         except Exception as e:
-            st.error(f"Could not load {csv_file}: {e}")
+            st.error(f"Could not load {fname}: {e}")
+
 
 def load_sql_questions():
-    """Load SQL questions from json file if it exists."""
-    import os
-    questions_file = "sql_questions.json"
-    
-    if os.path.exists(questions_file):
-        try:
-            with open(questions_file, 'r') as f:
-                return json.load(f)
-        except Exception as e:
-            st.sidebar.warning(f"Could not load questions: {e}")
-    return None
+    """Load SQL questions directly from GitHub raw link."""
+    url = "https://raw.githubusercontent.com/mhuh22/Python-workspace/master/Personal_Projects/Code_Assistant/sql_questions.json"
+    try:
+        resp = requests.get(url, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+    except Exception as e:
+        st.sidebar.warning(f"Could not load SQL questions: {e}")
+        return None
 
 # Load examples on first run
 if not st.session_state.example_loaded:
