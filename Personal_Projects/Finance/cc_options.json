@@ -48,7 +48,7 @@
       "base_rate_x": 1.0,
       "category_multipliers_x": {
         "travel_portal": 5.0,
-        "dining": 3.0,
+        "dining": 3.0
       }
     },
     {
