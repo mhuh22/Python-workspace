@@ -2,30 +2,29 @@
   "credit_cards": [
     {
       "card_name": "Chase Freedom Unlimited",
-      "network": "Visa",
       "annual_cost": "$0",
       "base_rate_x": 1.5,
       "category_multipliers_x": {
         "travel_portal": 5.0,
         "dining": 3.0,
-        "drugstores": 3.0
+        "drugstores": 3.0,
+        "grocery_stores": 1.5
       }
     },
     {
       "card_name": "Capital One SavorOne Cash Rewards Credit Card",
-      "network": "Mastercard",
       "annual_cost": "$0",
       "base_rate_x": 1.0,
       "category_multipliers_x": {
         "dining": 3.0,
         "entertainment": 3.0,
         "streaming_services": 3.0,
-        "grocery_stores": 3.0
+        "grocery_stores": 3.0,
+        "hotels": 5.0
       }
     },
     {
       "card_name": "Bank of America Customized Cash Rewards credit card",
-      "network": "Visa",
       "annual_cost": "$0",
       "base_rate_x": 1.0,
       "category_multipliers_x": {
@@ -35,13 +34,58 @@
     },
     {
       "card_name": "American Express Gold Card",
-      "network": "American Express",
       "annual_cost": "$250",
       "base_rate_x": 1.0,
       "category_multipliers_x": {
         "U.S._supermarkets": 4.0,
         "restaurants_worldwide": 4.0,
         "flights_booked_direct": 3.0
+      }
+    },
+    {
+      "card_name": "Chase Sapphire Preferred",
+      "annual_cost": "$0",
+      "base_rate_x": 1.0,
+      "category_multipliers_x": {
+        "travel_portal": 5.0,
+        "dining": 3.0,
+      }
+    },
+    {
+      "card_name": "Wells Fargo Active Cash",
+      "annual_cost": "$0",
+      "base_rate_x": 2.0,
+      "category_multipliers_x": {
+        "travel_portal": 2.0,
+        "dining": 2.0
+      }
+    },
+    {
+      "card_name": "American Express Blue Cash Preferred",
+      "annual_cost": "$0",
+      "base_rate_x": 1.0,
+      "category_multipliers_x": {
+        "grocery_stores": 6.0,
+        "streaming_services": 6.0,
+        "gas": 3.0
+      }
+    },
+    {
+      "card_name": "Capital One Venture X",
+      "annual_cost": "$395",
+      "base_rate_x": 2.0,
+      "category_multipliers_x": {
+        "travel_portal": 5.0,
+        "hotels": 10.0
+      }
+    },
+    {
+      "card_name": "American Express Platinum",
+      "annual_cost": "$695",
+      "base_rate_x": 1.0,
+      "category_multipliers_x": {
+        "travel_portal": 5.0,
+        "hotels": 5.0
       }
     }
   ]

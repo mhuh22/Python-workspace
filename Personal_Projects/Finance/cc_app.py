@@ -6,12 +6,12 @@ import altair as alt
 import json
 import os
 
-st.set_page_config(page_title="Transactions Viewer", page_icon="🧾", layout="wide")
+st.set_page_config(page_title="Credit Card Rewards Optimizer", page_icon="🧾", layout="wide")
 
 # Reset button at the top
 col1, col2 = st.columns([4, 1])
 with col1:
-    st.title("🧾Transactions Viewer")
+    st.title("🧾Credit Card Rewards Optimizer")
 with col2:
     if st.button("🔄 Reset All", type="secondary", help="Clear all data and reset the app"):
         # Clear all session state
@@ -23,15 +23,28 @@ with col2:
 
 @st.cache_data
 def load_credit_cards():
-    """Load credit card data from GitHub raw URL"""
+    """Load credit card data: try local file first, then GitHub fallback."""
+    local_path = "cc_options.json"
+    
+    # 1. Try local file
+    if os.path.exists(local_path):
+        try:
+            with open(local_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            return data
+        except Exception as e:
+            st.warning(f"Local file found but could not be read: {e}")
+
+    # 2. Fallback to GitHub URL
     try:
         url = "https://raw.githubusercontent.com/mhuh22/Python-workspace/master/Personal_Projects/Finance/cc_options.json"
         response = requests.get(url)
-        response.raise_for_status()   # raise an error for bad status codes
-        return response.json()        # parse JSON directly
+        response.raise_for_status()
+        return response.json()
     except requests.exceptions.RequestException as e:
-        st.error(f"Error fetching credit card data: {e}")
+        st.error(f"Error fetching credit card data from GitHub: {e}")
         return None
+
 
 @st.cache_data(show_spinner=False)
 def load_default():
@@ -96,7 +109,6 @@ def get_all_card_options(transaction_category, amount, cc_data, total_monthly_sp
         
         card_options.append({
             "card_name": card["card_name"],
-            "network": card["network"],
             "annual_cost": card["annual_cost"],
             "annual_cost_numeric": annual_cost,
             "reward_rate": max_multiplier,
@@ -317,6 +329,7 @@ if cc_data:
     optimization_data = []
     total_gross_rewards = 0
     total_annual_costs = 0
+    total_spend = 0
     unique_cards_used = set()
     
     # Process historical transactions
@@ -335,6 +348,7 @@ if cc_data:
             })
             
             total_gross_rewards += best_option['rewards']
+            total_spend += float(row['price'])  # <-- add this
             if best_option['card_name'] not in unique_cards_used:
                 total_annual_costs += best_option['annual_cost_numeric']
                 unique_cards_used.add(best_option['card_name'])
@@ -356,6 +370,7 @@ if cc_data:
                 })
                 
                 total_gross_rewards += best_option['rewards']
+                total_spend += float(future_purchase['amount'])
                 if best_option['card_name'] not in unique_cards_used:
                     total_annual_costs += best_option['annual_cost_numeric']
                     unique_cards_used.add(best_option['card_name'])
@@ -414,12 +429,14 @@ if cc_data:
                     st.write("---")
     
     # Summary stats
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Total Gross Rewards", f"${total_gross_rewards:.2f}")
+        st.metric("Total Spend", f"${total_spend:.2f}")
     with col2:
-        st.metric("Total Annual Costs", f"${total_annual_costs:.2f}")
+        st.metric("Total Gross Rewards", f"${total_gross_rewards:.2f}")
     with col3:
+        st.metric("Total Annual Costs", f"${total_annual_costs:.2f}")       
+    with col4:
         net_total = total_gross_rewards - total_annual_costs
         st.metric("Net Rewards (After Fees)", f"${net_total:.2f}")
     
@@ -440,7 +457,6 @@ if cc_data:
 
             card_rows.append({
                 "Card Name": card.get("card_name", ""),
-                "Network": card.get("network", ""),
                 "Annual Cost": card.get("annual_cost", ""),
                 "Base Rate": f"{card.get('base_rate_x', 0):.1f}%",
                 "Category Multipliers": readable,
@@ -456,7 +472,9 @@ with st.expander("📋 Future Enhancements", expanded=False):
     st.write("**Planned improvements for the credit card optimization tool:**")
     
     todo_items = [
-        "💰 **Annual Fee Analysis** - Factor in annual fees when calculating net rewards",
+        " Add the ability for users to select the cards that they already have",
+        " Sign up for cards 1 by 1, or optimize for maximum savings",
+        " Likelihood for getting approved",
         "📊 **Rewards Rate Comparison** - Visual comparison of reward rates across cards",
         "➕ **Add More Cards** - Expand the credit card database with additional options",
         "🎁 **Intro Offers** - Include sign-up bonuses and introductory rates",
