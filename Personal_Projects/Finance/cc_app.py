@@ -230,203 +230,293 @@ It is collapsed by default to keep the main view clean.
 if cc_data:
     st.subheader("💳 Credit Card Optimization")
     
-    # Future purchases section
-    with st.expander("🔮 Future Purchases", expanded=False):
-        st.write("**Add planned future purchases to see how they affect optimal card strategy:**")
-        
-        # Initialize session state
-        if 'future_purchases' not in st.session_state:
-            st.session_state.future_purchases = []
-        
-        # Create editable dataframe for future purchases
-        if st.session_state.future_purchases:
-            # Convert to DataFrame for editing
-            future_df = pd.DataFrame(st.session_state.future_purchases)
-            
-            # Add empty row for new entries
-            empty_row = pd.DataFrame([{
-                'date': pd.Timestamp.now().date(),
-                'vendor': '',
-                'category': 'groceries',
-                'amount': 0.0
-            }])
-            future_df = pd.concat([future_df, empty_row], ignore_index=True)
-            
-            # Display editable dataframe
-            edited_df = st.data_editor(
-                future_df,
-                column_config={
-                    "date": st.column_config.DateColumn("Date", width="small"),
-                    "vendor": st.column_config.TextColumn("Vendor", width="medium"),
-                    "category": st.column_config.SelectboxColumn(
-                        "Category",
-                        options=["groceries", "dining", "gas", "online_shopping", "utilities", 
-                                "airfare", "hotels", "subscriptions", "entertainment", "drugstores", 
-                                "travel_portal", "home_improvement", "rideshare"],
-                        width="medium"
-                    ),
-                    "amount": st.column_config.NumberColumn("Amount ($)", min_value=0.01, step=0.01, format="$%.2f")
-                },
-                num_rows="dynamic",
-                use_container_width=True,
-                hide_index=True
-            )
-            
-            # Update session state with edited data
-            if not edited_df.empty:
-                # Filter out empty rows
-                valid_rows = edited_df[(edited_df['vendor'] != '') & (edited_df['amount'] > 0) & (edited_df['date'].notna())]
-                st.session_state.future_purchases = valid_rows.to_dict('records')
-            
-            # Action buttons
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("Clear All", type="secondary"):
-                    st.session_state.future_purchases = []
-                    st.rerun()
-            with col2:
-                if st.button("Refresh Analysis", type="primary"):
-                    st.rerun()
-        else:
-            # Show empty state with instructions
-            st.info("No future purchases added yet. Use the table below to add planned purchases.")
-            
-            # Create initial empty dataframe
-            empty_df = pd.DataFrame([{
-                'date': pd.Timestamp.now().date(),
-                'vendor': '',
-                'category': 'groceries',
-                'amount': 0.0
-            }])
-            
-            edited_df = st.data_editor(
-                empty_df,
-                column_config={
-                    "date": st.column_config.DateColumn("Date", width="small"),
-                    "vendor": st.column_config.TextColumn("Vendor", width="medium"),
-                    "category": st.column_config.SelectboxColumn(
-                        "Category",
-                        options=["groceries", "dining", "gas", "online_shopping", "utilities", 
-                                "airfare", "hotels", "subscriptions", "entertainment", "drugstores", 
-                                "travel_portal", "home_improvement", "rideshare"],
-                        width="medium"
-                    ),
-                    "amount": st.column_config.NumberColumn("Amount ($)", min_value=0.01, step=0.01, format="$%.2f")
-                },
-                num_rows="dynamic",
-                use_container_width=True,
-                hide_index=True
-            )
-            
-            # Update session state
-            if not edited_df.empty:
-                valid_rows = edited_df[(edited_df['vendor'] != '') & (edited_df['amount'] > 0) & (edited_df['date'].notna())]
-                if not valid_rows.empty:
-                    st.session_state.future_purchases = valid_rows.to_dict('records')
-                    st.success("Future purchases added! Analysis will update automatically.")
+    # Initialize editable cards in session state
+    if 'editable_cards' not in st.session_state:
+        st.session_state.editable_cards = cc_data.get("credit_cards", []).copy()
     
-    # Calculate optimal cards for each transaction (including future purchases)
+    # Use editable cards for optimization
+    cc_data_for_optimization = {"credit_cards": st.session_state.editable_cards}
+    
+    # Initialize editable transactions in session state
+    if 'editable_transactions' not in st.session_state:
+        st.session_state.editable_transactions = []
+    
+    # Build initial transaction list from historical data (sorted by date desc)
+    if not st.session_state.editable_transactions:
+        temp_transactions = []
+        for _, row in df.iterrows():
+            temp_transactions.append({
+                'Date': row['date'].strftime('%Y-%m-%d'),
+                'Vendor': row['vendor'],
+                'Category': row['category'],
+                'Amount': float(row['price'])
+            })
+        # Sort by date descending (newest first)
+        temp_transactions.sort(key=lambda x: x['Date'], reverse=True)
+        st.session_state.editable_transactions = temp_transactions
+    
+    # Create initial combined dataframe for display (will be recalculated after edits)
+    # Calculate optimal cards for each transaction from editable table
     optimization_data = []
     total_gross_rewards = 0
     total_annual_costs = 0
     total_spend = 0
     unique_cards_used = set()
     
-    # Process historical transactions
-    for _, row in df.iterrows():
-        options = get_all_card_options(row['category'], row['price'], cc_data)
+    # Process editable transactions to get optimization results
+    for trans in st.session_state.editable_transactions:
+        category = trans['Category']
+        amount = float(trans['Amount'])
+        
+        options = get_all_card_options(category, amount, cc_data_for_optimization)
         if options:
             best_option = options[0]  # Already sorted by net rewards
             optimization_data.append({
-                'Date': row['date'].strftime('%Y-%m-%d'),
-                'Vendor': row['vendor'],
-                'Category': row['category'],
-                'Amount': f"${row['price']:.2f}",
+                'Date': trans['Date'],
+                'Vendor': trans['Vendor'],
+                'Category': category,
+                'Amount': amount,
                 'Best Card': best_option['card_name'],
                 'Reward Rate': f"{best_option['reward_rate']:.1f}%",
                 'Rewards': f"${best_option['rewards']:.2f}"
             })
             
             total_gross_rewards += best_option['rewards']
-            total_spend += float(row['price'])  # <-- add this
+            total_spend += amount
             if best_option['card_name'] not in unique_cards_used:
                 total_annual_costs += best_option['annual_cost_numeric']
                 unique_cards_used.add(best_option['card_name'])
     
-    # Process future purchases if any
-    if 'future_purchases' in st.session_state and st.session_state.future_purchases:
-        for future_purchase in st.session_state.future_purchases:
-            options = get_all_card_options(future_purchase['category'], future_purchase['amount'], cc_data)
-            if options:
-                best_option = options[0]
-                optimization_data.append({
-                    'Date': future_purchase['date'].strftime('%Y-%m-%d') if isinstance(future_purchase['date'], pd.Timestamp) else str(future_purchase['date']),
-                    'Vendor': future_purchase['vendor'],
-                    'Category': future_purchase['category'],
-                    'Amount': f"${future_purchase['amount']:.2f}",
-                    'Best Card': best_option['card_name'],
-                    'Reward Rate': f"{best_option['reward_rate']:.1f}%",
-                    'Rewards': f"${best_option['rewards']:.2f}"
-                })
-                
-                total_gross_rewards += best_option['rewards']
-                total_spend += float(future_purchase['amount'])
-                if best_option['card_name'] not in unique_cards_used:
-                    total_annual_costs += best_option['annual_cost_numeric']
-                    unique_cards_used.add(best_option['card_name'])
+    # Create combined dataframe with transaction data and optimization results
+    if optimization_data:
+        combined_df = pd.DataFrame(optimization_data)
+        
+        # Sort by date descending (newest first)
+        combined_df['Date'] = pd.to_datetime(combined_df['Date'], errors='coerce')
+        combined_df = combined_df.sort_values('Date', ascending=False, na_position='last')
+        combined_df['Date'] = combined_df['Date'].dt.strftime('%Y-%m-%d')
+    else:
+        # Create empty dataframe with all columns
+        combined_df = pd.DataFrame(columns=['Date', 'Vendor', 'Category', 'Amount', 'Best Card', 'Reward Rate', 'Rewards'])
     
-    opt_df = pd.DataFrame(optimization_data)
+    # Add filters section
+    with st.expander("🔍 Filters", expanded=False):
+        filter_col1, filter_col2, filter_col3 = st.columns(3)
+        
+        with filter_col1:
+            # Category filter
+            all_categories = ["groceries", "dining", "gas", "online_shopping", "utilities", 
+                             "airfare", "hotels", "subscriptions", "entertainment", "drugstores", 
+                             "travel_portal", "home_improvement", "rideshare"]
+            selected_categories = st.multiselect(
+                "Filter by Category",
+                options=all_categories,
+                default=[],
+                key="filter_categories"
+            )
+        
+        with filter_col2:
+            # Best Card filter
+            if not combined_df.empty and 'Best Card' in combined_df.columns:
+                all_cards = sorted([card for card in combined_df['Best Card'].unique() if card and card.strip()])
+                selected_cards = st.multiselect(
+                    "Filter by Best Card",
+                    options=all_cards,
+                    default=[],
+                    key="filter_cards"
+                )
+            else:
+                selected_cards = []
+        
+        with filter_col3:
+            # Vendor search
+            vendor_search = st.text_input(
+                "Search Vendor",
+                value="",
+                key="filter_vendor",
+                placeholder="Enter vendor name..."
+            )
+        
+        # Date range filter
+        if not combined_df.empty and 'Date' in combined_df.columns:
+            date_col1, date_col2 = st.columns(2)
+            with date_col1:
+                min_date = st.date_input(
+                    "From Date",
+                    value=None,
+                    key="filter_date_from"
+                )
+            with date_col2:
+                max_date = st.date_input(
+                    "To Date",
+                    value=None,
+                    key="filter_date_to"
+                )
+        else:
+            min_date = None
+            max_date = None
+        
+        # Clear filters button
+        if st.button("Clear All Filters", type="secondary", key="clear_filters"):
+            st.session_state.filter_categories = []
+            st.session_state.filter_cards = []
+            st.session_state.filter_vendor = ""
+            st.session_state.filter_date_from = None
+            st.session_state.filter_date_to = None
+            st.rerun()
     
-    # Add row selection
-    st.write("Click on a row below to see all credit card options for that transaction:")
-    selected_rows = st.dataframe(
-        opt_df, 
+    # Apply filters to combined_df before adding empty row
+    filtered_df = combined_df.copy()
+    
+    if not filtered_df.empty:
+        # Filter by category
+        if selected_categories:
+            filtered_df = filtered_df[filtered_df['Category'].isin(selected_categories)]
+        
+        # Filter by best card
+        if selected_cards and 'Best Card' in filtered_df.columns:
+            filtered_df = filtered_df[filtered_df['Best Card'].isin(selected_cards)]
+        
+        # Filter by vendor search
+        if vendor_search and vendor_search.strip():
+            vendor_search_lower = vendor_search.lower().strip()
+            filtered_df = filtered_df[
+                filtered_df['Vendor'].astype(str).str.lower().str.contains(vendor_search_lower, na=False)
+            ]
+        
+        # Filter by date range
+        if (min_date is not None or max_date is not None) and 'Date' in filtered_df.columns:
+            filtered_df['Date'] = pd.to_datetime(filtered_df['Date'], errors='coerce')
+            if min_date is not None:
+                filtered_df = filtered_df[filtered_df['Date'] >= pd.Timestamp(min_date)]
+            if max_date is not None:
+                filtered_df = filtered_df[filtered_df['Date'] <= pd.Timestamp(max_date)]
+            filtered_df['Date'] = filtered_df['Date'].dt.strftime('%Y-%m-%d')
+    
+    # Show filter status
+    total_rows = len(combined_df) if not combined_df.empty else 0
+    filtered_rows = len(filtered_df) if not filtered_df.empty else 0
+    has_filters = (selected_categories or selected_cards or (vendor_search and vendor_search.strip()) or 
+                   min_date is not None or max_date is not None)
+    
+    if has_filters and total_rows > 0:
+        st.caption(f"📊 Showing {filtered_rows} of {total_rows} transactions (filters applied)")
+    elif total_rows > 0:
+        st.caption(f"📊 Showing all {total_rows} transactions")
+    
+    # Store filtered_df before adding empty row (for merge logic later)
+    filtered_df_before_empty = filtered_df.copy()
+    
+    # Add empty row at the TOP for new entries
+    empty_row = pd.DataFrame([{
+        'Date': pd.Timestamp.now().strftime('%Y-%m-%d'),
+        'Vendor': '',
+        'Category': 'groceries',
+        'Amount': 0.0,
+        'Best Card': '',
+        'Reward Rate': '',
+        'Rewards': ''
+    }])
+    filtered_df = pd.concat([empty_row, filtered_df], ignore_index=True)
+    
+    # Display combined editable table
+    st.write("**Edit the table below to add or remove transactions. The optimization will update automatically:**")
+    
+    edited_df = st.data_editor(
+        filtered_df,
+        column_config={
+            "Date": st.column_config.TextColumn("Date (YYYY-MM-DD)", width="small"),
+            "Vendor": st.column_config.TextColumn("Vendor", width="medium"),
+            "Category": st.column_config.SelectboxColumn(
+                "Category",
+                options=["groceries", "dining", "gas", "online_shopping", "utilities", 
+                        "airfare", "hotels", "subscriptions", "entertainment", "drugstores", 
+                        "travel_portal", "home_improvement", "rideshare"],
+                width="medium"
+            ),
+            "Amount": st.column_config.NumberColumn("Amount ($)", min_value=0.0, step=0.01, format="$%.2f", width="small"),
+            "Best Card": st.column_config.TextColumn("Best Card", width="medium", disabled=True),
+            "Reward Rate": st.column_config.TextColumn("Reward Rate", width="small", disabled=True),
+            "Rewards": st.column_config.TextColumn("Rewards", width="small", disabled=True)
+        },
+        num_rows="dynamic",
         use_container_width=True,
-        on_select="rerun",
-        selection_mode="single-row",
-        hide_index=True
+        hide_index=True,
+        key="optimization_table_editor"
     )
     
-    # Show detailed comparison in sidebar for selected row
-    if selected_rows.selection.rows:
-        selected_idx = selected_rows.selection.rows[0]
-        selected_transaction = optimization_data[selected_idx]
+    # Filter out empty/invalid rows and update session state
+    if not edited_df.empty:
+        valid_rows = edited_df[
+            (edited_df['Vendor'].astype(str).str.strip() != '') & 
+            (edited_df['Amount'] > 0) & 
+            (edited_df['Date'].astype(str).str.strip() != '')
+        ].copy()
         
-        # Get all card options for this transaction
-        transaction_row = df.iloc[selected_idx]
-        all_options = get_all_card_options(transaction_row['category'], transaction_row['price'], cc_data)
+        # If filters were applied, merge edited rows with rows that were filtered out
+        if has_filters and not combined_df.empty and not valid_rows.empty:
+            # Use the filtered_df before empty row was added for comparison
+            original_filtered = filtered_df_before_empty[filtered_df_before_empty['Vendor'].astype(str).str.strip() != ''].copy() if not filtered_df_before_empty.empty else pd.DataFrame()
+            
+            # Create keys for matching rows
+            valid_rows['_key'] = valid_rows['Date'].astype(str) + '|' + valid_rows['Vendor'].astype(str) + '|' + valid_rows['Category'].astype(str) + '|' + valid_rows['Amount'].astype(str)
+            combined_df['_key'] = combined_df['Date'].astype(str) + '|' + combined_df['Vendor'].astype(str) + '|' + combined_df['Category'].astype(str) + '|' + combined_df['Amount'].astype(str)
+            
+            if not original_filtered.empty:
+                original_filtered['_key'] = original_filtered['Date'].astype(str) + '|' + original_filtered['Vendor'].astype(str) + '|' + original_filtered['Category'].astype(str) + '|' + original_filtered['Amount'].astype(str)
+                # Get rows from combined_df that weren't in the original filtered view
+                filtered_out = combined_df[~combined_df['_key'].isin(original_filtered['_key'])].copy()
+            else:
+                # If no rows matched the filter, all rows were filtered out
+                filtered_out = combined_df.copy()
+            
+            # Combine edited rows with filtered-out rows
+            if not filtered_out.empty:
+                # Keep only editable columns from filtered_out
+                filtered_out_editable = filtered_out[['Date', 'Vendor', 'Category', 'Amount']].copy()
+                valid_rows_editable = valid_rows[['Date', 'Vendor', 'Category', 'Amount']].copy()
+                valid_rows = pd.concat([valid_rows_editable, filtered_out_editable], ignore_index=True)
+            else:
+                valid_rows = valid_rows[['Date', 'Vendor', 'Category', 'Amount']].copy()
+        else:
+            # No filters applied, just use the edited rows
+            valid_rows = valid_rows[['Date', 'Vendor', 'Category', 'Amount']].copy()
         
-        # Create sidebar for card comparison
-        with st.sidebar:
-            st.subheader(f"💳 Card Options")
-            st.write(f"**Transaction**: {selected_transaction['Vendor']}")
-            st.write(f"**Category**: {selected_transaction['Category']}")
-            st.write(f"**Amount**: {selected_transaction['Amount']}")
+        # Sort by date descending before saving to session state
+        if not valid_rows.empty:
+            valid_rows['Date'] = pd.to_datetime(valid_rows['Date'], errors='coerce')
+            valid_rows = valid_rows.sort_values('Date', ascending=False, na_position='last')
+            valid_rows['Date'] = valid_rows['Date'].dt.strftime('%Y-%m-%d')
             
-            # Highlight the best option
-            best_option = all_options[0]
-            st.success(f"🏆 **Best**: {best_option['card_name']}")
-            st.write(f"**Rate**: {best_option['reward_rate']:.1f}% ({best_option['matched_category']})")
-            st.write(f"**Gross Rewards**: ${best_option['rewards']:.2f}")
-            st.write(f"**Annual Cost**: {best_option['annual_cost']}")
-            st.write(f"**Net Rewards**: ${best_option['net_rewards']:.2f}")
+            # Update session state with only editable columns
+            st.session_state.editable_transactions = valid_rows.to_dict('records')
             
-            st.divider()
+            # Recalculate totals based on updated transactions
+            total_gross_rewards = 0
+            total_annual_costs = 0
+            total_spend = 0
+            unique_cards_used = set()
             
-            # Show all options
-            st.write("**All Options:**")
-            for i, option in enumerate(all_options):
-                if i == 0:
-                    st.write(f"🥇 **{option['card_name']}** - {option['reward_rate']:.1f}% = ${option['net_rewards']:.2f} net")
-                elif i == 1:
-                    st.write(f"🥈 **{option['card_name']}** - {option['reward_rate']:.1f}% = ${option['net_rewards']:.2f} net")
-                elif i == 2:
-                    st.write(f"🥉 **{option['card_name']}** - {option['reward_rate']:.1f}% = ${option['net_rewards']:.2f} net")
-                else:
-                    st.write(f"**{option['card_name']}** - {option['reward_rate']:.1f}% = ${option['net_rewards']:.2f} net")
-                
-                if i < len(all_options) - 1:
-                    st.write("---")
+            for trans in st.session_state.editable_transactions:
+                category = trans['Category']
+                amount = float(trans['Amount'])
+                options = get_all_card_options(category, amount, cc_data_for_optimization)
+                if options:
+                    best_option = options[0]
+                    total_gross_rewards += best_option['rewards']
+                    total_spend += amount
+                    if best_option['card_name'] not in unique_cards_used:
+                        total_annual_costs += best_option['annual_cost_numeric']
+                        unique_cards_used.add(best_option['card_name'])
+        else:
+            st.session_state.editable_transactions = []
+            total_gross_rewards = 0
+            total_annual_costs = 0
+            total_spend = 0
+            unique_cards_used = set()
+    
+    if not optimization_data:
+        st.info("Add transactions to the table above to see optimization results.")
     
     # Summary stats
     col1, col2, col3, col4 = st.columns(4)
@@ -440,30 +530,83 @@ if cc_data:
         net_total = total_gross_rewards - total_annual_costs
         st.metric("Net Rewards (After Fees)", f"${net_total:.2f}")
     
-    st.info(f"💡 **Cards Used**: {len(unique_cards_used)} unique cards. Annual costs are only counted once per card.")
+    if unique_cards_used:
+        st.info(f"💡 **Cards Used**: {len(unique_cards_used)} unique cards. Annual costs are only counted once per card.")
    
     # --- All Available Cards (collapsible) ---
     with st.expander("All Available Cards", expanded=False):
+        st.write("**Edit the table below to add, remove, or modify credit cards. Changes will affect optimization calculations.**")
+        
+        # Prepare cards for editing
         card_rows = []
-        for card in cc_data.get("credit_cards", []):
-            # Build a readable multipliers string
+        for card in st.session_state.editable_cards:
+            # Convert multipliers dict to JSON string for editing
             multipliers = card.get("category_multipliers_x", {})
-            if multipliers:
-                readable = ", ".join([
-                    f"{k.replace('_',' ').title()}: {v:.1f}%" for k, v in multipliers.items()
-                ])
-            else:
-                readable = "—"
-
+            multipliers_str = json.dumps(multipliers) if multipliers else "{}"
+            
             card_rows.append({
                 "Card Name": card.get("card_name", ""),
-                "Annual Cost": card.get("annual_cost", ""),
-                "Base Rate": f"{card.get('base_rate_x', 0):.1f}%",
-                "Category Multipliers": readable,
+                "Annual Cost": card.get("annual_cost", "$0"),
+                "Base Rate": card.get("base_rate_x", 1.0),
+                "Category Multipliers (JSON)": multipliers_str,
             })
-
+        
         cards_df = pd.DataFrame(card_rows)
-        st.dataframe(cards_df, use_container_width=True, hide_index=True)
+        
+        # Display editable table
+        edited_cards_df = st.data_editor(
+            cards_df,
+            column_config={
+                "Card Name": st.column_config.TextColumn("Card Name", width="large", required=True),
+                "Annual Cost": st.column_config.TextColumn("Annual Cost", width="small", help="Format: $0, $95, $250, etc."),
+                "Base Rate": st.column_config.NumberColumn("Base Rate (%)", min_value=0.0, step=0.1, format="%.1f", width="small"),
+                "Category Multipliers (JSON)": st.column_config.TextColumn(
+                    "Category Multipliers (JSON)", 
+                    width="large",
+                    help='JSON format: {"category_name": multiplier, ...}. Example: {"grocery_stores": 6.0, "dining": 3.0}'
+                ),
+            },
+            num_rows="dynamic",
+            use_container_width=True,
+            hide_index=True,
+            key="cards_editor"
+        )
+        
+        # Update session state with edited cards
+        if not edited_cards_df.empty:
+            valid_cards = []
+            for _, row in edited_cards_df.iterrows():
+                card_name = str(row['Card Name']).strip()
+                if card_name:  # Only include cards with names
+                    try:
+                        # Parse multipliers JSON
+                        multipliers_str = str(row['Category Multipliers (JSON)']).strip()
+                        if multipliers_str:
+                            multipliers = json.loads(multipliers_str)
+                        else:
+                            multipliers = {}
+                        
+                        # Ensure multipliers values are floats
+                        multipliers = {k: float(v) for k, v in multipliers.items()}
+                        
+                        valid_cards.append({
+                            "card_name": card_name,
+                            "annual_cost": str(row['Annual Cost']).strip(),
+                            "base_rate_x": float(row['Base Rate']),
+                            "category_multipliers_x": multipliers
+                        })
+                    except (json.JSONDecodeError, ValueError) as e:
+                        st.warning(f"Error parsing card '{card_name}': {e}. Please check the JSON format.")
+                        # Still add the card but with empty multipliers
+                        valid_cards.append({
+                            "card_name": card_name,
+                            "annual_cost": str(row['Annual Cost']).strip(),
+                            "base_rate_x": float(row['Base Rate']),
+                            "category_multipliers_x": {}
+                        })
+            
+            st.session_state.editable_cards = valid_cards
+            # Cards updated - optimization will use updated cards on next rerun
 else:
     st.warning("Credit card data not available for optimization")
 
