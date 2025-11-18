@@ -1,104 +1,275 @@
 date,vendor,category,price
-2025-05-01,Trader Joe's,groceries,64.25
-2025-05-02,Chevron,gas,47.8
-2025-05-03,Starbucks,dining,8.5
-2025-05-04,Amazon,online_shopping,52.4
-2025-05-05,QFC,groceries,92.1
-2025-05-06,Lyft,rideshare,19.3
-2025-05-07,T-Mobile,utilities,90.0
-2025-05-08,Home Depot,home_improvement,145.75
-2025-05-09,Chipotle,dining,13.6
-2025-05-10,Shell,gas,55.2
-2025-05-11,Whole Foods,groceries,71.9
-2025-05-12,Spotify,subscriptions,10.99
+2025-05-01,Pagliacci Pizza,dining,18.31
+2025-05-02,Apple Music,subscriptions,15.99
+2025-05-03,Apple Music,subscriptions,12.99
+2025-05-04,Walmart,online_shopping,61.03
+2025-05-04,Amazon,online_shopping,60.01
+2025-05-05,QFC,groceries,87.41
+2025-05-05,Lyft,rideshare,10.42
+2025-05-05,Verizon,utilities,95.14
+2025-05-06,Dough Zone,dining,22.91
+2025-05-06,Amazon,online_shopping,37.83
+2025-05-07,Pagliacci Pizza,dining,22.89
+2025-05-08,Whole Foods,groceries,53.94
+2025-05-09,Lyft,rideshare,25.4
+2025-05-10,Walmart,online_shopping,64.83
+2025-05-10,Amazon,online_shopping,70.27
+2025-05-11,Milstead Coffee,dining,23.88
+2025-05-12,Lyft,rideshare,16.46
+2025-05-12,Spotify,subscriptions,15.99
+2025-05-12,Comcast,utilities,87.13
 2025-05-13,Delta Air Lines,airfare,410.0
+2025-05-13,Dough Zone,dining,18.09
+2025-05-14,Evergreens,dining,28.03
+2025-05-14,QFC,groceries,75.82
 2025-05-14,Marriott,hotels,232.5
-2025-05-15,Seattle City Light,utilities,120.4
-2025-05-18,Delta Air Lines,airfare,865.0
-2025-05-19,Marriott,hotels,345.0
-2025-06-01,Costco,groceries,182.3
-2025-06-02,Exxon,gas,50.7
-2025-06-03,McDonald's,dining,9.95
-2025-06-04,Target,online_shopping,68.2
-2025-06-05,Safeway,groceries,87.45
-2025-06-06,Uber,rideshare,23.4
-2025-06-07,Comcast,utilities,110.5
-2025-06-08,Lowes,home_improvement,123.9
-2025-06-09,Pizza Hut,dining,25.3
-2025-06-10,BP,gas,53.4
-2025-06-11,Netflix,subscriptions,15.99
-2025-06-12,United Airlines,airfare,399.0
-2025-06-13,Hilton,hotels,205.6
-2025-06-14,Puget Sound Energy,utilities,136.7
-2025-06-18,United Airlines,airfare,910.0
-2025-06-19,Hilton,hotels,372.0
-2025-07-01,Trader Joe's,groceries,74.8
-2025-07-02,Shell,gas,48.6
-2025-07-03,Olive Garden,dining,34.5
-2025-07-04,Walmart,online_shopping,88.25
-2025-07-05,Kroger,groceries,98.9
-2025-07-06,Lyft,rideshare,21.5
-2025-07-07,Verizon,utilities,82.2
-2025-07-08,Home Depot,home_improvement,166.4
-2025-07-09,Subway,dining,12.8
-2025-07-10,Chevron,gas,49.1
-2025-07-11,Apple Music,subscriptions,10.99
-2025-07-12,Southwest Airlines,airfare,322.0
-2025-07-13,Hyatt,hotels,178.25
-2025-07-14,Seattle City Light,utilities,129.5
-2025-07-18,Lufthansa,airfare,1290.0
-2025-07-19,Hyatt,hotels,428.0
-2025-08-01,Costco,groceries,194.2
-2025-08-02,Exxon,gas,52.3
-2025-08-03,Chipotle,dining,14.2
-2025-08-04,Amazon,online_shopping,75.1
-2025-08-05,Safeway,groceries,101.45
-2025-08-06,Uber,rideshare,28.6
-2025-08-07,Comcast,utilities,112.7
-2025-08-08,Lowes,home_improvement,149.99
-2025-08-09,Starbucks,dining,7.9
-2025-08-10,Shell,gas,54.5
-2025-08-11,Netflix,subscriptions,15.99
-2025-08-12,Delta Air Lines,airfare,455.0
-2025-08-13,Marriott,hotels,212.4
-2025-08-14,Puget Sound Energy,utilities,140.0
-2025-08-18,Delta Air Lines,airfare,975.0
-2025-08-19,Marriott,hotels,389.0
-2025-09-01,Whole Foods,groceries,88.25
-2025-09-02,BP,gas,53.9
-2025-09-03,McDonald's,dining,10.75
-2025-09-04,Target,online_shopping,92.35
-2025-09-05,QFC,groceries,95.8
-2025-09-06,Lyft,rideshare,26.3
-2025-09-07,T-Mobile,utilities,97.0
-2025-09-08,Home Depot,home_improvement,178.45
-2025-09-09,Pizza Hut,dining,27.6
-2025-09-10,Chevron,gas,50.8
-2025-09-11,Spotify,subscriptions,10.99
+2025-05-15,Ba Bar,dining,21.36
+2025-05-16,Safeway,groceries,54.47
+2025-05-17,QFC,groceries,71.51
+2025-05-18,Sweetgreen,dining,16.98
+2025-05-19,Lowes,home_improvement,64.97
+2025-05-19,Target,online_shopping,38.67
+2025-05-20,Uber,rideshare,19.96
+2025-05-20,Seattle City Light,utilities,77.38
+2025-05-21,Lyft,rideshare,23.96
+2025-05-22,QFC,groceries,104.95
+2025-05-23,Amazon,online_shopping,24.53
+2025-05-24,QFC,groceries,76.8
+2025-05-24,Spotify,subscriptions,9.99
+2025-05-25,Amazon,online_shopping,15.76
+2025-05-25,Puget Sound Energy,utilities,36.32
+2025-05-26,Costco,groceries,75.57
+2025-05-26,Uber,rideshare,13.28
+2025-05-27,Sweetgreen,dining,21.24
+2025-05-28,Uber,rideshare,15.39
+2025-05-29,Lyft,rideshare,19.27
+2025-05-30,Kroger,groceries,99.51
+2025-05-31,Evergreens,dining,28.9
+2025-05-31,Amazon,online_shopping,72.61
+2025-06-01,Evergreens,dining,26.74
+2025-06-02,Sweetgreen,dining,27.67
+2025-06-02,Milstead Coffee,dining,27.22
+2025-06-03,Amazon,online_shopping,46.52
+2025-06-03,Netflix,subscriptions,12.99
+2025-06-04,Lowes,home_improvement,74.25
+2025-06-04,Uber,rideshare,13.38
+2025-06-05,Target,online_shopping,71.84
+2025-06-05,Verizon,utilities,89.54
+2025-06-06,Kroger,groceries,100.5
+2025-06-06,QFC,groceries,95.35
+2025-06-07,QFC,groceries,74.89
+2025-06-07,Target,online_shopping,25.87
+2025-06-08,QFC,groceries,85.62
+2025-06-09,Spotify,subscriptions,15.99
+2025-06-10,Pagliacci Pizza,dining,15.64
+2025-06-11,Amazon,online_shopping,19.11
+2025-06-12,United Airlines,airfare,385.0
+2025-06-12,Dough Zone,dining,25.45
+2025-06-12,Comcast,utilities,94.24
+2025-06-13,Hilton,hotels,198.6
+2025-06-13,Amazon,online_shopping,76.11
+2025-06-13,Apple Music,subscriptions,15.99
+2025-06-14,Lyft,rideshare,21.67
+2025-06-15,Netflix,subscriptions,12.99
+2025-06-16,Safeway,groceries,109.31
+2025-06-17,Costco,groceries,56.13
+2025-06-18,Kizuki Ramen,dining,27.12
+2025-06-19,Uber,rideshare,16.11
+2025-06-20,Kroger,groceries,49.32
+2025-06-20,Seattle City Light,utilities,72.34
+2025-06-21,Cafe Umbria,dining,28.48
+2025-06-22,Victrola Coffee,dining,30.79
+2025-06-22,Milstead Coffee,dining,29.24
+2025-06-23,Kizuki Ramen,dining,22.52
+2025-06-23,Netflix,subscriptions,9.99
+2025-06-24,MOD Pizza,dining,19.22
+2025-06-24,T-Mobile,utilities,86.2
+2025-06-25,Costco,groceries,85.48
+2025-06-25,Puget Sound Energy,utilities,27.17
+2025-06-26,Trader Joe's,groceries,89.59
+2025-06-27,Amazon,online_shopping,58.62
+2025-06-28,Target,online_shopping,84.96
+2025-06-29,Target,online_shopping,63.03
+2025-06-30,Walmart,online_shopping,48.53
+2025-07-01,Uber,rideshare,11.74
+2025-07-02,Evergreens,dining,19.16
+2025-07-03,Trader Joe's,groceries,94.76
+2025-07-03,Home Depot,home_improvement,77.48
+2025-07-04,Whole Foods,groceries,53.71
+2025-07-04,Spotify,subscriptions,15.99
+2025-07-05,Trader Joe's,groceries,88.49
+2025-07-05,Verizon,utilities,100.5
+2025-07-06,Din Tai Fung,dining,14.64
+2025-07-06,Kroger,groceries,87.56
+2025-07-07,Sweetgreen,dining,25.99
+2025-07-07,Target,online_shopping,38.61
+2025-07-08,Whole Foods,groceries,74.15
+2025-07-09,Trader Joe's,groceries,82.79
+2025-07-10,Apple Music,subscriptions,10.99
+2025-07-11,Din Tai Fung,dining,12.45
+2025-07-12,Southwest Airlines,airfare,325.0
+2025-07-12,Apple Music,subscriptions,10.99
+2025-07-12,Comcast,utilities,99.69
+2025-07-13,Safeway,groceries,77.96
+2025-07-13,Hyatt,hotels,176.25
+2025-07-14,Kizuki Ramen,dining,22.21
+2025-07-14,Costco,groceries,70.93
+2025-07-15,Evergreens,dining,17.43
+2025-07-16,Trader Joe's,groceries,50.91
+2025-07-16,Uber,rideshare,13.83
+2025-07-17,Whole Foods,groceries,63.4
+2025-07-18,Din Tai Fung,dining,13.18
+2025-07-18,Costco,groceries,74.37
+2025-07-19,Ba Bar,dining,16.47
+2025-07-20,Safeway,groceries,108.62
+2025-07-20,Seattle City Light,utilities,87.69
+2025-07-21,Whole Foods,groceries,50.56
+2025-07-22,Milstead Coffee,dining,24.26
+2025-07-22,Ba Bar,dining,25.99
+2025-07-23,Sweetgreen,dining,24.64
+2025-07-24,Walmart,online_shopping,81.73
+2025-07-25,MOD Pizza,dining,17.57
+2025-07-25,Apple Music,subscriptions,12.99
+2025-07-25,Puget Sound Energy,utilities,40.43
+2025-07-26,Spotify,subscriptions,15.99
+2025-07-27,Homegrown,dining,28.66
+2025-07-28,Target,online_shopping,25.19
+2025-07-29,Sweetgreen,dining,29.69
+2025-07-30,Milstead Coffee,dining,13.01
+2025-07-31,Costco,groceries,100.03
+2025-07-31,Apple Music,subscriptions,9.99
+2025-08-01,Walmart,online_shopping,74.86
+2025-08-02,MOD Pizza,dining,23.74
+2025-08-02,Lyft,rideshare,25.98
+2025-08-03,Trader Joe's,groceries,73.67
+2025-08-04,Apple Music,subscriptions,15.99
+2025-08-05,Costco,groceries,85.03
+2025-08-05,Target,online_shopping,58.34
+2025-08-05,Verizon,utilities,72.11
+2025-08-06,Cafe Umbria,dining,19.76
+2025-08-06,Spotify,subscriptions,10.99
+2025-08-07,Ba Bar,dining,22.5
+2025-08-08,Home Depot,home_improvement,86.02
+2025-08-09,Lyft,rideshare,13.26
+2025-08-10,Costco,groceries,95.22
+2025-08-11,Costco,groceries,66.48
+2025-08-12,Japan Airlines,airfare,1095.0
+2025-08-12,Home Depot,home_improvement,88.68
+2025-08-12,Target,online_shopping,84.39
+2025-08-12,Comcast,utilities,73.78
+2025-08-13,Marriott,hotels,276.4
+2025-08-13,Uber,rideshare,21.98
+2025-08-14,Target,online_shopping,76.06
+2025-08-15,Spotify,subscriptions,15.99
+2025-08-16,Apple Music,subscriptions,9.99
+2025-08-17,Apple Music,subscriptions,15.99
+2025-08-18,Victrola Coffee,dining,15.99
+2025-08-19,Costco,groceries,58.87
+2025-08-20,Uber,rideshare,15.78
+2025-08-20,Netflix,subscriptions,9.99
+2025-08-20,Seattle City Light,utilities,84.64
+2025-08-21,Lyft,rideshare,10.1
+2025-08-22,Ba Bar,dining,25.5
+2025-08-22,Pagliacci Pizza,dining,29.91
+2025-08-23,Whole Foods,groceries,53.78
+2025-08-23,Amazon,online_shopping,80.27
+2025-08-24,Home Depot,home_improvement,79.58
+2025-08-25,Apple Music,subscriptions,9.99
+2025-08-25,Puget Sound Energy,utilities,36.55
+2025-08-26,Ba Bar,dining,18.3
+2025-08-27,Victrola Coffee,dining,29.36
+2025-08-27,Spotify,subscriptions,10.99
+2025-08-28,Costco,groceries,82.07
+2025-08-29,Walmart,online_shopping,87.56
+2025-08-30,Spotify,subscriptions,12.99
+2025-08-31,Spotify,subscriptions,9.99
+2025-09-01,Marination,dining,24.96
+2025-09-02,Spotify,subscriptions,12.99
+2025-09-03,Target,online_shopping,74.02
+2025-09-04,Lowes,home_improvement,75.28
+2025-09-04,Spotify,subscriptions,9.99
+2025-09-05,QFC,groceries,53.75
+2025-09-05,Verizon,utilities,96.83
+2025-09-06,Kroger,groceries,53.84
+2025-09-07,Target,online_shopping,66.39
+2025-09-08,Netflix,subscriptions,10.99
+2025-09-09,Kroger,groceries,81.27
+2025-09-09,Trader Joe's,groceries,74.16
+2025-09-10,Spotify,subscriptions,12.99
+2025-09-11,Costco,groceries,100.36
 2025-09-12,United Airlines,airfare,412.0
+2025-09-12,Walmart,online_shopping,19.1
+2025-09-12,Comcast,utilities,88.84
 2025-09-13,Hilton,hotels,214.35
-2025-09-14,Seattle City Light,utilities,138.2
-2025-09-18,Emirates,airfare,1475.0
-2025-09-19,Ritz-Carlton,hotels,512.0
-2025-10-01,Costco,groceries,205.4
-2025-10-02,Shell,gas,55.1
-2025-10-03,Olive Garden,dining,36.25
-2025-10-04,Amazon,online_shopping,97.8
-2025-10-05,Safeway,groceries,103.2
-2025-10-06,Uber,rideshare,29.4
-2025-10-07,Verizon,utilities,88.6
-2025-10-08,Lowes,home_improvement,163.75
-2025-10-09,Chipotle,dining,15.5
-2025-10-10,Exxon,gas,56.2
-2025-10-11,Apple Music,subscriptions,10.99
+2025-09-13,Target,online_shopping,75.25
+2025-09-14,Target,online_shopping,46.26
+2025-09-15,Kizuki Ramen,dining,30.16
+2025-09-16,Safeway,groceries,46.63
+2025-09-17,Lowes,home_improvement,73.77
+2025-09-18,Lowes,home_improvement,37.35
+2025-09-18,Apple Music,subscriptions,9.99
+2025-09-19,Cafe Umbria,dining,14.53
+2025-09-20,Whole Foods,groceries,87.04
+2025-09-20,Amazon,online_shopping,50.63
+2025-09-20,Seattle City Light,utilities,90.91
+2025-09-21,Amazon,online_shopping,33.23
+2025-09-22,Netflix,subscriptions,10.99
+2025-09-23,QFC,groceries,82.92
+2025-09-23,Amazon,online_shopping,85.45
+2025-09-24,Din Tai Fung,dining,19.41
+2025-09-25,Ba Bar,dining,23.68
+2025-09-25,Puget Sound Energy,utilities,25.66
+2025-09-26,Walmart,online_shopping,64.08
+2025-09-27,Home Depot,home_improvement,33.18
+2025-09-28,Spotify,subscriptions,12.99
+2025-09-29,Ba Bar,dining,14.97
+2025-09-29,Kroger,groceries,76.55
+2025-09-30,Netflix,subscriptions,10.99
+2025-10-01,Spotify,subscriptions,15.99
+2025-10-02,Cafe Umbria,dining,21.47
+2025-10-03,Uber,rideshare,11.73
+2025-10-04,Victrola Coffee,dining,19.15
+2025-10-05,Netflix,subscriptions,9.99
+2025-10-05,Verizon,utilities,74.47
+2025-10-06,Amazon,online_shopping,15.88
+2025-10-07,Cafe Umbria,dining,19.29
+2025-10-07,Uber,rideshare,16.73
+2025-10-08,Sweetgreen,dining,22.99
+2025-10-09,Target,online_shopping,59.12
+2025-10-10,Marination,dining,21.79
+2025-10-10,Cafe Umbria,dining,16.74
+2025-10-11,Evergreens,dining,17.99
+2025-10-11,Target,online_shopping,30.89
 2025-10-12,Southwest Airlines,airfare,334.0
+2025-10-12,Milstead Coffee,dining,19.34
+2025-10-12,Netflix,subscriptions,15.99
+2025-10-12,Comcast,utilities,98.39
+2025-10-13,Costco,groceries,89.59
 2025-10-13,Hyatt,hotels,193.75
-2025-10-14,Puget Sound Energy,utilities,144.5
-2025-10-18,United Airlines,airfare,995.0
-2025-10-19,Hilton,hotels,401.0
-2025-10-20,Costco,groceries,210.6
-2025-10-22,Chevron,gas,57.3
-2025-10-24,Amazon,online_shopping,82.9
-2025-10-27,Trader Joe's,groceries,96.4
-2025-10-29,Netflix,subscriptions,15.99
-2025-10-31,Seattle City Light,utilities,150.0
+2025-10-13,Apple Music,subscriptions,9.99
+2025-10-14,Netflix,subscriptions,12.99
+2025-10-15,Whole Foods,groceries,54.97
+2025-10-15,Spotify,subscriptions,12.99
+2025-10-16,Marination,dining,28.02
+2025-10-16,Amazon,online_shopping,41.31
+2025-10-17,Evergreens,dining,24.68
+2025-10-17,Target,online_shopping,44.37
+2025-10-18,Sweetgreen,dining,15.14
+2025-10-19,Lowes,home_improvement,78.85
+2025-10-20,Evergreens,dining,20.5
+2025-10-20,Seattle City Light,utilities,115.52
+2025-10-21,Spotify,subscriptions,9.99
+2025-10-22,Costco,groceries,61.88
+2025-10-22,Home Depot,home_improvement,25.53
+2025-10-23,Lyft,rideshare,20.03
+2025-10-24,Kroger,groceries,49.86
+2025-10-25,Lyft,rideshare,16.87
+2025-10-25,Puget Sound Energy,utilities,42.07
+2025-10-26,T-Mobile,utilities,76.6
+2025-10-27,Milstead Coffee,dining,17.87
+2025-10-27,Pagliacci Pizza,dining,23.44
+2025-10-28,Walmart,online_shopping,52.9
+2025-10-28,Amazon,online_shopping,61.3
+2025-10-29,Safeway,groceries,54.58
+2025-10-30,Sweetgreen,dining,28.47
+2025-10-31,Lyft,rideshare,10.54
