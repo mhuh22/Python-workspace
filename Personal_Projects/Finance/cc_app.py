@@ -9,10 +9,16 @@ import os
 st.set_page_config(page_title="Credit Card Rewards Optimizer", page_icon="🧾", layout="wide")
 
 # Reset button at the top
-col1, col2 = st.columns([4, 1])
+col1, col2, col3 = st.columns([3, 1, 1])
 with col1:
     st.title("🧾Credit Card Rewards Optimizer")
-with col2:
+# with col2:
+#     if st.button("🚀 Optimize", type="primary", help="Recalculate optimization for all transactions"):
+#         # Force recalculation by clearing editable transactions
+#         if 'editable_transactions' in st.session_state:
+#             st.session_state.editable_transactions = []
+#         st.rerun()
+with col3:
     if st.button("🔄 Reset All", type="secondary", help="Clear all data and reset the app"):
         # Clear all session state
         for key in list(st.session_state.keys()):
@@ -48,6 +54,12 @@ def load_credit_cards():
 
 @st.cache_data(show_spinner=False)
 def load_default():
+    # Try to load from local file first
+    local_file = "sample_transactions.csv"
+    if os.path.exists(local_file):
+        return pd.read_csv(local_file)
+    
+    # Fall back to URL if local file doesn't exist
     url = "https://raw.githubusercontent.com/mhuh22/Python-workspace/master/Personal_Projects/Finance/sample_transactions.csv"
     r = requests.get(url, headers={"User-Agent": "streamlit-app/1.0"}, timeout=10)
     r.raise_for_status()
@@ -131,44 +143,59 @@ def find_best_card(transaction_category, amount, cc_data):
     best = options[0]  # Already sorted by rewards
     return best["card_name"], best["reward_rate"], best["rewards"]
 
-# --- Transactions table ---
-with st.expander("📊 View Transactions Table", expanded=False):
-    # Upload data section nested inside
-    uploaded = st.file_uploader("Upload CSV", type=["csv"], label_visibility="collapsed")
-    st.caption("If no file is uploaded, a small sample dataset is used.")
-    
-    # Load data
-    if uploaded is not None:
-        try:
-            df = pd.read_csv(uploaded)
-        except Exception as e:
-            st.error(f"Could not read file: {e}")
-            st.stop()
-    else:
-        df = load_default()
+# --- Load transaction data ---
+# Initialize df in session state if not exists
+if 'transaction_df' not in st.session_state:
+    st.session_state.transaction_df = load_default()
+    # Normalize and parse
+    st.session_state.transaction_df.columns = [c.lower() for c in st.session_state.transaction_df.columns]
+    st.session_state.transaction_df["date"] = pd.to_datetime(st.session_state.transaction_df["date"], errors="coerce")
+    st.session_state.transaction_df = st.session_state.transaction_df.dropna(subset=["date"])
+    st.session_state.transaction_df = st.session_state.transaction_df.sort_values("date", ascending=False)
 
-    # --- Validation ---
-    required = {"date","vendor","category","price"}
-    missing = required - set(map(str.lower, df.columns))
-    if missing:
-        st.error(f"Missing required columns: {sorted(list(missing))}. Expected: {sorted(list(required))}")
-        st.stop()
-
-    # --- Normalize and parse ---
-    df.columns = [c.lower() for c in df.columns]
-    df["date"] = pd.to_datetime(df["date"], errors="coerce")
-    df = df.dropna(subset=["date"])
-
-    # 🔽 sort by date descending
-    df = df.sort_values("date", ascending=False)
-
-    st.dataframe(df, use_container_width=True, hide_index=True)
-
+df = st.session_state.transaction_df
 
 # Load credit card data
 cc_data = load_credit_cards()
 
 # --- Filters + bar chart ---
+# Calculate optimization metrics from original dataframe
+if cc_data:
+    total_spend_from_df = 0
+    total_gross_rewards_from_df = 0
+    total_annual_costs_from_df = 0
+    unique_cards_used_from_df = set()
+    
+    for _, row in df.iterrows():
+        category = row['category']
+        amount = float(row['price'])
+        total_spend_from_df += amount
+        
+        options = get_all_card_options(category, amount, cc_data)
+        if options:
+            best_option = options[0]  # Already sorted by net rewards
+            total_gross_rewards_from_df += best_option['rewards']
+            if best_option['card_name'] not in unique_cards_used_from_df:
+                total_annual_costs_from_df += best_option['annual_cost_numeric']
+                unique_cards_used_from_df.add(best_option['card_name'])
+    
+    net_rewards_from_df = total_gross_rewards_from_df - total_annual_costs_from_df
+    
+    # Display all metrics in a row
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Total Spend", f"${total_spend_from_df:.2f}")
+    with col2:
+        st.metric("Total Gross Rewards", f"${total_gross_rewards_from_df:.2f}")
+    with col3:
+        st.metric("Total Annual Costs", f"${total_annual_costs_from_df:.2f}")
+    with col4:
+        st.metric("Net Rewards (After Fees)", f"${net_rewards_from_df:.2f}")
+else:
+    # If no credit card data, just show total spend
+    total_spend_from_df = df["price"].sum()
+    st.metric("Total Spend", f"${total_spend_from_df:.2f}")
+
 st.subheader("Total spend by category")
 
 month_series = df["date"].dt.to_period("M").astype(str).unique().tolist()
@@ -287,6 +314,7 @@ if cc_data:
                 total_annual_costs += best_option['annual_cost_numeric']
                 unique_cards_used.add(best_option['card_name'])
     
+    
     # Create combined dataframe with transaction data and optimization results
     if optimization_data:
         combined_df = pd.DataFrame(optimization_data)
@@ -298,6 +326,33 @@ if cc_data:
     else:
         # Create empty dataframe with all columns
         combined_df = pd.DataFrame(columns=['Date', 'Vendor', 'Category', 'Amount', 'Best Card', 'Reward Rate', 'Rewards'])
+    
+    # File uploader for CSV
+    uploaded = st.file_uploader("Upload CSV", type=["csv"], key="optimization_file_uploader")
+    
+    # Handle file upload
+    if uploaded is not None:
+        try:
+            new_df = pd.read_csv(uploaded)
+            # Validation
+            required = {"date", "vendor", "category", "price"}
+            missing = required - set(map(str.lower, new_df.columns))
+            if missing:
+                st.error(f"Missing required columns: {sorted(list(missing))}. Expected: {sorted(list(required))}")
+            else:
+                # Normalize and parse
+                new_df.columns = [c.lower() for c in new_df.columns]
+                new_df["date"] = pd.to_datetime(new_df["date"], errors="coerce")
+                new_df = new_df.dropna(subset=["date"])
+                new_df = new_df.sort_values("date", ascending=False)
+                
+                # Update session state
+                st.session_state.transaction_df = new_df
+                # Reset editable transactions to trigger reload
+                st.session_state.editable_transactions = []
+                st.rerun()
+        except Exception as e:
+            st.error(f"Could not read file: {e}")
     
     # Add filters section
     with st.expander("🔍 Filters", expanded=False):
@@ -517,21 +572,6 @@ if cc_data:
     
     if not optimization_data:
         st.info("Add transactions to the table above to see optimization results.")
-    
-    # Summary stats
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric("Total Spend", f"${total_spend:.2f}")
-    with col2:
-        st.metric("Total Gross Rewards", f"${total_gross_rewards:.2f}")
-    with col3:
-        st.metric("Total Annual Costs", f"${total_annual_costs:.2f}")       
-    with col4:
-        net_total = total_gross_rewards - total_annual_costs
-        st.metric("Net Rewards (After Fees)", f"${net_total:.2f}")
-    
-    if unique_cards_used:
-        st.info(f"💡 **Cards Used**: {len(unique_cards_used)} unique cards. Annual costs are only counted once per card.")
    
     # --- All Available Cards (collapsible) ---
     with st.expander("All Available Cards", expanded=False):
@@ -559,7 +599,7 @@ if cc_data:
             column_config={
                 "Card Name": st.column_config.TextColumn("Card Name", width="large", required=True),
                 "Annual Cost": st.column_config.TextColumn("Annual Cost", width="small", help="Format: $0, $95, $250, etc."),
-                "Base Rate": st.column_config.NumberColumn("Base Rate (%)", min_value=0.0, step=0.1, format="%.1f", width="small"),
+                "Base Rate": st.column_config.NumberColumn("Base Rate", min_value=0.0, step=0.1, format="%.1f", width="small"),
                 "Category Multipliers (JSON)": st.column_config.TextColumn(
                     "Category Multipliers (JSON)", 
                     width="large",
@@ -618,10 +658,7 @@ with st.expander("📋 Future Enhancements", expanded=False):
         " Add the ability for users to select the cards that they already have",
         " Sign up for cards 1 by 1, or optimize for maximum savings",
         " Likelihood for getting approved",
-        "📊 **Rewards Rate Comparison** - Visual comparison of reward rates across cards",
-        "➕ **Add More Cards** - Expand the credit card database with additional options",
         "🎁 **Intro Offers** - Include sign-up bonuses and introductory rates",
-        "💳 **Recommended Credit Range** - Suggest cards based on credit score requirements"
     ]
     
     for item in todo_items:
