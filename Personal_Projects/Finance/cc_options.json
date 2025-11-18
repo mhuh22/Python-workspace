@@ -3,6 +3,7 @@
     {
       "card_name": "American Express Blue Cash Preferred",
       "annual_cost": "$0",
+      "signup_bonus": "$0",
       "base_rate_x": 1.0,
       "category_multipliers_x": {
         "grocery_stores": 6.0,
@@ -12,7 +13,8 @@
     },
     {
       "card_name": "American Express Gold Card",
-      "annual_cost": "$250",
+      "annual_cost": "$325",
+      "signup_bonus": "$0",
       "base_rate_x": 1.0,
       "category_multipliers_x": {
         "U.S._supermarkets": 4.0,
@@ -21,17 +23,9 @@
       }
     },
     {
-      "card_name": "American Express Platinum",
-      "annual_cost": "$695",
-      "base_rate_x": 1.0,
-      "category_multipliers_x": {
-        "travel_portal": 5.0,
-        "hotels": 5.0
-      }
-    },
-    {
       "card_name": "Bank of America Customized Cash Rewards credit card",
       "annual_cost": "$0",
+      "signup_bonus": "$0",
       "base_rate_x": 1.0,
       "category_multipliers_x": {
         "choice_category": 3.0,
@@ -41,6 +35,7 @@
     {
       "card_name": "Capital One SavorOne Cash Rewards Credit Card",
       "annual_cost": "$0",
+      "signup_bonus": "$0",
       "base_rate_x": 1.0,
       "category_multipliers_x": {
         "dining": 3.0,
@@ -51,20 +46,12 @@
       }
     },
     {
-      "card_name": "Capital One Venture X",
-      "annual_cost": "$95",
-      "base_rate_x": 2.0,
-      "category_multipliers_x": {
-        "travel_portal": 5.0,
-        "hotels": 10.0
-      }
-    },
-    {
       "card_name": "Chase Freedom Unlimited",
       "annual_cost": "$0",
+      "signup_bonus": "$0",
       "base_rate_x": 1.5,
       "category_multipliers_x": {
-        "travel_portal": 5.0,
+        "airfare": 5.0,
         "dining": 3.0,
         "drugstores": 3.0,
         "grocery_stores": 1.5
@@ -73,28 +60,20 @@
     {
       "card_name": "Chase Sapphire Preferred",
       "annual_cost": "$0",
+      "signup_bonus": "$0",
       "base_rate_x": 1.0,
       "category_multipliers_x": {
-        "travel_portal": 5.0,
-        "dining": 3.0
-      }
-    },
-    {
-      "card_name": "Chase Sapphire Reserve",
-      "annual_cost": "$495",
-      "base_rate_x": 1.0,
-      "category_multipliers_x": {
-        "travel_portal": 4.0,
-        "hotels": 4.0,
+        "airfare": 5.0,
         "dining": 3.0
       }
     },
     {
       "card_name": "Wells Fargo Active Cash",
       "annual_cost": "$0",
+      "signup_bonus": "$0",
       "base_rate_x": 2.0,
       "category_multipliers_x": {
-        "travel_portal": 2.0,
+        "airfare": 2.0,
         "dining": 2.0
       }
     }
