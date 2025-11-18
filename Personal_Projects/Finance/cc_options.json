@@ -12,17 +12,6 @@
       }
     },
     {
-      "card_name": "American Express Gold Card",
-      "annual_cost": "$325",
-      "signup_bonus": "$0",
-      "base_rate_x": 1.0,
-      "category_multipliers_x": {
-        "U.S._supermarkets": 4.0,
-        "restaurants_worldwide": 4.0,
-        "flights_booked_direct": 3.0
-      }
-    },
-    {
       "card_name": "Bank of America Customized Cash Rewards credit card",
       "annual_cost": "$0",
       "signup_bonus": "$0",
